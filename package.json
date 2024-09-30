@@ -1,0 +1,15 @@
+{
+  "name": "a16zmistral",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "serve": "concurrently --kill-others \"cd ui && npm run dev\" \"cd api && conda activate a16zxmistral && langchain serve\"",
+    "install": "concurrently \"cd ui && npm install &\"  \"cd api && conda env create --file=environment.yml \""
+  },
+  "dependencies": {
+    "a16zmistral": "file:",
+    "concurrently": "^8.2.2",
+    "ui": "file:"
+  }
+}

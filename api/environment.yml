@@ -1,0 +1,12 @@
+name: a16zxmistral
+channels:
+  - defaults
+dependencies:
+  - python=3.11
+  - ipython
+  - ipykernel
+  - jupyter
+  - pip
+  - pip:
+    - langserve[all]
+    - langchain-cli
