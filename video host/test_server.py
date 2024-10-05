@@ -27,5 +27,5 @@ def show_image_from_url(url):
 
 
 # Replace the URL with the one hosting the image
-image_url = 'http://127.0.0.1:5000/video/BigBuckBunny.mjpeg/current_frame'
+image_url = 'http://127.0.0.1:5000/stream/4'
 show_image_from_url(image_url)

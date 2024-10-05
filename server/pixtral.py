@@ -69,10 +69,4 @@ class PixtralClient():
         print(chat_response.choices[0].message.content)
 
 
-start = time.perf_counter()
-res = PixtralClient().send_messages([
-    PixtralMessage("What is in this image? Describe like Mr Bean."),
-    PixtralImage("./assets/turtle.jpg")
-])
-end = time.perf_counter()
-print(start-end)
+pixtralClient = PixtralClient()

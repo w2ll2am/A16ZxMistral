@@ -48,9 +48,7 @@ def get_current_frame(video_id):
 @app.route('/stream_id')
 def list_videos():
     return jsonify({
-        'videos': {
-            video_streams[key][0]: os.path.basename(key).strip(".mov") for key in video_streams.keys()
-        }
+        video_streams[key][0]: os.path.basename(key).strip(".mov") for key in video_streams.keys()
     })
 
 def load_videos():
