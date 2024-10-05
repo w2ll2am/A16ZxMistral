@@ -1,62 +1,62 @@
-import React from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { selectSortedAlerts, Alert } from "../../redux/slices/alertsSlice";
+import { useAlertsQuery } from "../../hooks/useAlertsQuery";
+import AlertItem from "./AlertItem";
+import { useChat } from "../../hooks/useChat";
 
-interface CameraLocation {
-  id: number;
-  name: string;
-  lat: number;
-  lng: number;
-}
+const AlertsTimeline: React.FC = () => {
+  const sortedAlerts = useSelector(selectSortedAlerts);
+  const [displayedAlerts, setDisplayedAlerts] = useState<Alert[]>([]);
+  const { sendMessage } = useChat();
+  useAlertsQuery();
 
-const InteractiveMap: React.FC = () => {
-  const { isLoaded } = useLoadScript({
-    googleMapsApiKey: "YOUR_GOOGLE_MAPS_API_KEY", // Replace with your Google Maps API key
-  });
+  useEffect(() => {
+    const newAlerts = sortedAlerts.filter(
+      (alert) =>
+        !displayedAlerts.some(
+          (displayedAlert) =>
+            displayedAlert.type === alert.type &&
+            displayedAlert.stream_id === alert.stream_id &&
+            displayedAlert.timestamp === alert.timestamp
+        )
+    );
 
-  const cameraLocations: CameraLocation[] = [
-    { id: 1, name: "Camera 1", lat: 51.505, lng: -0.09 },
-    { id: 2, name: "Camera 2", lat: 51.51, lng: -0.1 },
-    { id: 3, name: "Camera 3", lat: 51.515, lng: -0.09 },
-  ];
+    if (newAlerts.length > 0) {
+      setDisplayedAlerts((prevAlerts) => [...newAlerts, ...prevAlerts]);
+    }
+  }, [sortedAlerts]);
 
-  if (!isLoaded) return <div>Loading...</div>;
+  const handleAlertClick = (alert: Alert) => {
+    if (alert) {
+      sendMessage(
+        `Tell me more about the ${alert.type} alert in stream ${alert.stream_id}`
+      );
+    }
+  };
 
   return (
-    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
-      <div className="flex-auto p-4">
-        <div className="py-4 pr-1 mb-4 bg-gradient-to-tl from-gray-900 to-slate-800 rounded-xl">
-          <div className="flex mb-2">
-            <div className="flex items-center justify-center w-12 h-12 mr-4 text-white rounded-lg bg-center shadow-soft-2xl bg-no-repeat bg-cover bg-gradient-to-tl from-gray-900 to-slate-800">
-              <i className="fas fa-map-marker-alt text-lg"></i>
-            </div>
-            <div className="flex flex-col items-start">
-              <h6 className="mb-0 leading-normal text-white text-size-sm">
-                Interactive Map
-              </h6>
-              <p className="mb-0 font-semibold leading-tight text-white text-xs">
-                Camera Locations
-              </p>
+    <div className="w-full max-w-full px-3 md:w-1/2 md:flex-none lg:w-1/3 lg:flex-none">
+      <div className="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
+        <div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white p-6 pb-0">
+          <h6 className="mb-0">Alerts overview</h6>
+        </div>
+        <div className="flex-auto p-4 overflow-hidden">
+          <div className="h-[calc(100vh-230px)] overflow-y-auto">
+            <div className="relative">
+              {displayedAlerts.map((alert, index) => (
+                <AlertItem
+                  key={`${alert.stream_id}-${alert.type}-${alert.timestamp}-${index}`}
+                  {...alert}
+                  onClick={() => handleAlertClick(alert)}
+                />
+              ))}
             </div>
           </div>
-        </div>
-        <div style={{ height: "400px" }}>
-          <GoogleMap
-            mapContainerStyle={{ height: "100%", width: "100%" }}
-            center={{ lat: 51.505, lng: -0.09 }}
-            zoom={13}
-          >
-            {cameraLocations.map((camera) => (
-              <Marker
-                key={camera.id}
-                position={{ lat: camera.lat, lng: camera.lng }}
-                label={camera.name}
-              />
-            ))}
-          </GoogleMap>
         </div>
       </div>
     </div>
   );
 };
 
-export default InteractiveMap;
+export default AlertsTimeline;

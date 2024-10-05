@@ -21,9 +21,8 @@ const Dashboard: React.FC = () => {
           <div className="w-full max-w-full px-3 mt-0 mb-6 md:mb-0 md:w-1/2 md:flex-none lg:w-2/3 lg:flex-none">
             <InteractiveMap />
           </div>
-          <div className="w-full max-w-full px-3 md:w-1/2 md:flex-none lg:w-1/3 lg:flex-none">
-            <AlertsTimeline />
-          </div>
+
+          <AlertsTimeline />
         </div>
       </div>
     </div>
