@@ -28,7 +28,7 @@ class VideoStream:
         return cv2.imencode('.jpg', frame)[1].tobytes()
 
 video_streams = {}
-video_folder = './videos'  # Replace with your folder path
+video_folder = './videos'
 
 def get_video_by_id(id):
     for key in video_streams.keys():

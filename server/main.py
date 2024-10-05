@@ -1,10 +1,12 @@
 import base64
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
 
 from pixtral import pixtralClient, PixtralMessage, PixtralImage
 from video_engine import videoEngine
+
+from prompting import Prompting
 
 app = FastAPI()
 
@@ -14,20 +16,34 @@ async def root():
     return {"message": "Test commit"}
 
 
-@app.get("/hello/{name}")
-async def say_hello(name: str):
-    return {"message": f"Hello {name}"}
+@app.get("/stream_analysis/{stream_id}", response_class=HTMLResponse)
+async def stream_analysis_endpoint(stream_id: str):
+    image = videoEngine.get_stream_by_id(stream_id)
+    res = pixtralClient.send_messages(
+        PixtralMessage(Prompting.STREAM_CLASSIFIER.value),
+        PixtralImage(image)
+    )
+    return res
+
+
+@app.websocket("/core_socket")
+async def websocket_endpoint(websocket: WebSocket):
+    print(f"Socket attached!")
+    await websocket.accept()
+
+    while True:
+        print(f"Getting new frame for stream {stream_id}")
+
+        await websocket.send_text(f"{res}")
 
 
 @app.get("/test/stream/{stream_id}", response_class=HTMLResponse)
-async def test_stream_by_id(stream_id: str):
+def test_stream_by_id(stream_id: str):
     image = videoEngine.get_stream_by_id(stream_id)
     res = pixtralClient.send_messages(
-        PixtralMessage("What is in this image? describe as concisely as possible"),
+        PixtralMessage(Prompting.STREAM_CLASSIFIER.value),
         PixtralImage(image)
     )
-
-    message_str = res.choices[0].message.content
 
     # HTML content with the embedded base64 image and a styled paragraph of text
     html_content = f"""
@@ -73,7 +89,7 @@ async def test_stream_by_id(stream_id: str):
                 <h1>Stream {stream_id}</h1>
                  <img src="data:image/jpeg;base64,{image}" alt="Base64 Image">
                 <p>
-                    {message_str}
+                    {res}
                 </p>
             </div>
         </body>
