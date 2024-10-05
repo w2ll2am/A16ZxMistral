@@ -101,6 +101,34 @@ def stream_analysis_endpoint(stream_id: str):
 
     return "error"
 
+@app.get("/crowd_analysis/{stream_id}", response_class=HTMLResponse)
+def crowd_analysis_endpoint(stream_id: str):
+    attempts = 0
+    while attempts < 3:
+        image = videoEngine.get_stream_by_id(stream_id)
+        res = pixtralClient.send_messages(
+            PixtralMessage(Prompting.CROWD_ANALYSIS.value),
+            PixtralImage(image)
+        )
+
+        # clean the string
+        res = res.strip("```").lstrip("json").replace("\n", "")
+        res = ast.literal_eval(res)
+        print(res)
+        alerts = [
+            Alert(
+                type=hazard,
+                stream_id=int(stream_id),
+                lat=100, long=200,
+                timestamp=datetime.now()
+            ).to_dict()
+            for hazard in res #if res[hazard] == "True"
+        ]
+
+        return json.dumps(res)
+
+    return "error"
+
 
 @app.get("/test/stream/{stream_id}", response_class=HTMLResponse)
 def test_stream_by_id(stream_id: str):
