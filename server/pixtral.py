@@ -36,8 +36,12 @@ class PixtralClient():
         self.model = "pixtral-12b-2409"
         self.client = Mistral(api_key=api_key)
 
-
     def send_messages(self, messages: List[PixtralMessage]):
+        """
+        Send a chain of Pixtral messages / images
+        :param messages:
+        :return:
+        """
         messages = [msg.content() for msg in messages]
         chat_response = self.client.chat.complete(
             model=self.model,
@@ -50,8 +54,11 @@ class PixtralClient():
         )
         return chat_response
 
-
     def test_response(self):
+        """
+        Don't use this; just syntax reference + testing API alive
+        :return:
+        """
         chat_response = self.client.chat.complete(
             model=self.model,
             messages=[

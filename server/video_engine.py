@@ -23,16 +23,15 @@ class VideoEngine:
         except requests.exceptions.RequestException as e:
             print(f"Could not get id! An error occurred: {e}")
 
-def show_image_from_url(url) -> bytes:
-    try:
-        # Get the image from the URL
-        response = requests.get(url)
-        response.raise_for_status()  # Check if the request was successful
+    def get_stream_by_id(self, id: int) -> bytes:
+        try:
+            # Get the image from the URL
+            response = requests.get(self.url(f"stream/{id}"))
+            response.raise_for_status()  # Check if the request was successful
+            return response.content
 
-        return response.content
-
-    except requests.exceptions.RequestException as e:
-        print(f"An error occurred: {e}")
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred: {e}")
 
 
 videoEngine = VideoEngine()
