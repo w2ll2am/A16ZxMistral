@@ -30,26 +30,37 @@ class VideoStream:
 video_streams = {}
 video_folder = './videos'  # Replace with your folder path
 
-@app.route('/video/<video_name>/current_frame')
-def get_current_frame(video_name):
-    video_path = os.path.join(video_folder, video_name)
+def get_video_by_id(id):
+    for key in video_streams.keys():
+        if video_streams[key][0] == id:
+            return key
+
+@app.route('/stream/<video_id>')
+def get_current_frame(video_id):
+    video_path = get_video_by_id(int(video_id))
     if video_path not in video_streams:
         return "Video not found", 404
-    frame = video_streams[video_path].get_frame()
+    frame = video_streams[video_path][1].get_frame()
     if frame is None:
         return "Frame not available", 503
     return Response(frame, mimetype='image/jpeg')
 
-@app.route('/videos')
+@app.route('/stream_id')
 def list_videos():
-    return jsonify({'videos': [os.path.basename(v) for v in video_streams.keys()]})
+    return jsonify({
+        'videos': {
+            video_streams[key][0]: os.path.basename(key).strip(".mov") for key in video_streams.keys()
+        }
+    })
 
 def load_videos():
+    id = 1
     for filename in os.listdir(video_folder):
-        if filename.endswith(('.mov', '.mp4')):  # Add more extensions if needed
+        if filename.endswith('.mov'):  # Add more extensions if needed
             video_path = os.path.join(video_folder, filename)
-            video_streams[video_path] = VideoStream(video_path)
+            video_streams[video_path] = (id, VideoStream(video_path))
             print(f"Loaded video: {video_path}")
+            id += 1
 
 if __name__ == '__main__':
     load_videos()
