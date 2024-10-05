@@ -55,10 +55,7 @@ const alertsSlice = createSlice({
         const existingAlertIndex = state[alert.stream_id].findIndex(
           (a) => a.type === alert.type
         );
-        if (existingAlertIndex !== -1) {
-          // Update existing alert
-          state[alert.stream_id][existingAlertIndex] = alert;
-        } else {
+        if (existingAlertIndex === -1) {
           // Add new alert
           state[alert.stream_id].push(alert);
         }
