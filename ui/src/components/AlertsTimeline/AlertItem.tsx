@@ -18,35 +18,45 @@ interface AlertItemProps {
 }
 
 const getAlertIcon = (type: string) => {
+  const iconProps = {
+    size: 20,
+    className: "text-white",
+  };
+
   switch (type) {
     case "fire":
-      return (
-        <Flame className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-red-600 to-rose-400 bg-clip-text fill-transparent" />
-      );
+      return <Flame {...iconProps} />;
     case "smoke":
-      return (
-        <Cloud className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-gray-600 to-gray-400 bg-clip-text fill-transparent" />
-      );
+      return <Cloud {...iconProps} />;
     case "responders":
-      return (
-        <Shield className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-blue-600 to-cyan-400 bg-clip-text fill-transparent" />
-      );
+      return <Shield {...iconProps} />;
     case "formations":
-      return (
-        <Users className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-green-600 to-lime-400 bg-clip-text fill-transparent" />
-      );
+      return <Users {...iconProps} />;
     case "crowds":
-      return (
-        <Users className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-yellow-600 to-yellow-400 bg-clip-text fill-transparent" />
-      );
+      return <Users {...iconProps} />;
     case "crush":
-      return (
-        <UserX className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-purple-600 to-pink-400 bg-clip-text fill-transparent" />
-      );
+      return <UserX {...iconProps} />;
     default:
-      return (
-        <AlertTriangle className="relative z-10 leading-none text-transparent bg-gradient-to-tl from-orange-600 to-orange-400 bg-clip-text fill-transparent" />
-      );
+      return <AlertTriangle {...iconProps} />;
+  }
+};
+
+const getAlertColor = (type: string) => {
+  switch (type) {
+    case "fire":
+      return "from-red-600 to-rose-400";
+    case "smoke":
+      return "from-gray-600 to-gray-400";
+    case "responders":
+      return "from-blue-600 to-cyan-400";
+    case "formations":
+      return "from-green-600 to-lime-400";
+    case "crowds":
+      return "from-yellow-600 to-yellow-400";
+    case "crush":
+      return "from-purple-600 to-pink-400";
+    default:
+      return "from-orange-600 to-orange-400";
   }
 };
 
@@ -56,15 +66,19 @@ const AlertItem: React.FC<AlertItemProps> = ({
   timestamp,
   onClick,
 }) => {
+  const bgColor = getAlertColor(type);
+
   return (
     <div
-      className="relative mb-4 after:clear-both after:table after:content-['']"
+      className="relative mb-4 flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
       onClick={onClick}
     >
-      <span className="w-6.5 h-6.5 text-base absolute left-4 z-10 inline-flex -translate-x-1/2 items-center justify-center rounded-full bg-white text-center font-semibold">
+      <div
+        className={`w-10 h-10 rounded-full bg-gradient-to-tl ${bgColor} flex items-center justify-center mr-4`}
+      >
         {getAlertIcon(type)}
-      </span>
-      <div className="ml-11.252 pt-1.4 lg:max-w-120 relative -top-1.5 w-auto">
+      </div>
+      <div className="flex-grow">
         <h6 className="mb-0 text-sm font-semibold leading-normal text-slate-700">
           {type.charAt(0).toUpperCase() + type.slice(1)} Alert - Stream{" "}
           {stream_id}
