@@ -1,4 +1,6 @@
 import base64
+import ast
+import json
 
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
@@ -6,35 +8,72 @@ from fastapi.responses import HTMLResponse
 from pixtral import pixtralClient, PixtralMessage, PixtralImage
 from video_engine import videoEngine
 
-from prompting import Prompting
+from prompting import Prompting, PromptClassifications, HazardClassification
 
 app = FastAPI()
 
 
 @app.get("/")
 async def root():
-    return {"message": "Test commit"}
+    return "Nenya V1.0 live"
+
+
+active_connections = []
+@app.websocket("/ws/dashboard")
+async def dashboard_websocket(websocket: WebSocket):
+    await websocket.accept()
+    active_connections.append(websocket)
+    try:
+        while True:
+            data = await websocket.receive_text()
+
+            # Parse the received JSON data
+            try:
+                message_data = json.loads(data)
+            except json.JSONDecodeError:
+                continue
+
+            # Echo the received message back to the sender
+            echo_message = f"Echo: {message_data['text']}"
+            echo_data = {
+                "id": message_data['id'],
+                "text": echo_message,
+                "isUser": False,
+                "sender": "Server"
+            }
+            await websocket.send_json(echo_data)
+
+            response_message = f"Server response to: {message_data['text']}"
+            response_data = {
+                "id": f"server-{message_data['id']}",
+                "text": response_message,
+                "isUser": False,
+                "sender": "Server"
+            }
+            await websocket.send_json(response_data)
+
+    finally:
+        active_connections.remove(websocket)
 
 
 @app.get("/stream_analysis/{stream_id}", response_class=HTMLResponse)
-async def stream_analysis_endpoint(stream_id: str):
-    image = videoEngine.get_stream_by_id(stream_id)
-    res = pixtralClient.send_messages(
-        PixtralMessage(Prompting.STREAM_CLASSIFIER.value),
-        PixtralImage(image)
-    )
-    return res
+def stream_analysis_endpoint(stream_id: str):
+    attempts = 0
+    while attempts < 3:
+        image = videoEngine.get_stream_by_id(stream_id)
+        res = pixtralClient.send_messages(
+            PixtralMessage(Prompting.STREAM_CLASSIFIER.value),
+            PixtralImage(image)
+        )
+
+        # clean the string
+        res = res.strip("```").lstrip("json").replace("\n", "")
+        res = ast.literal_eval(res)
+
+        hazards = HazardClassification.from_analysis(res)
 
 
-@app.websocket("/core_socket")
-async def websocket_endpoint(websocket: WebSocket):
-    print(f"Socket attached!")
-    await websocket.accept()
-
-    while True:
-        print(f"Getting new frame for stream {stream_id}")
-
-        await websocket.send_text(f"{res}")
+    return "error"
 
 
 @app.get("/test/stream/{stream_id}", response_class=HTMLResponse)
