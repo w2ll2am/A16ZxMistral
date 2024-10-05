@@ -1,3 +1,4 @@
+import base64
 from typing import Dict
 
 import requests
@@ -23,12 +24,13 @@ class VideoEngine:
         except requests.exceptions.RequestException as e:
             print(f"Could not get id! An error occurred: {e}")
 
-    def get_stream_by_id(self, id: int) -> bytes:
+    def get_stream_by_id(self, id: int) -> str:
         try:
             # Get the image from the URL
             response = requests.get(self.url(f"stream/{id}"))
             response.raise_for_status()  # Check if the request was successful
-            return response.content
+            decoded_image = base64.b64encode(response.content).decode('utf-8')
+            return decoded_image
 
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")
