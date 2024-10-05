@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from "react";
 import { useDispatch } from "react-redux";
 import { addMessage } from "../redux/slices/chatSlice";
 
-const WS_URL = "ws://localhost:8000/ws";
+const WS_URL = "http://127.0.0.1:8000/ws/dashboard";
 
 interface Message {
   id: string;
