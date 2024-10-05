@@ -42,7 +42,7 @@ const AlertsTimeline: React.FC = () => {
           <h6 className="mb-0">Alerts overview</h6>
         </div>
         <div className="flex-auto p-4 overflow-hidden">
-          <div className="h-[calc(100vh-230px)] overflow-y-auto">
+          <div className="h-[calc(100vh-490px)] overflow-y-auto">
             <div className="relative">
               {displayedAlerts.map((alert, index) => (
                 <AlertItem
