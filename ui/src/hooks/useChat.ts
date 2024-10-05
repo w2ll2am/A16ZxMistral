@@ -5,10 +5,8 @@ import { addMessage } from "../redux/slices/chatSlice";
 const WS_URL = "http://127.0.0.1:8000/ws/dashboard";
 
 interface Message {
-  id: string;
   text: string;
   isUser: boolean;
-  sender?: string;
 }
 
 export const useChat = () => {
@@ -61,10 +59,8 @@ export const useChat = () => {
   const sendMessage = (text: string) => {
     if (socket.current?.readyState === WebSocket.OPEN) {
       const message: Message = {
-        id: Date.now().toString(),
         text,
         isUser: true,
-        sender: "You",
       };
       console.log("Sending message:", message);
       socket.current.send(JSON.stringify(message));
