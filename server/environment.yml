@@ -9,7 +9,5 @@ dependencies:
   - pip
   - pip:
     - fastapi
-    - mistralai
-    - python-dotenv
     - python-dotenv 
     - mistralai
