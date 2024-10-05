@@ -36,5 +36,5 @@ class Prompting(Enum):
     """
 
     TELL_ME_MORE = """
-        You are an expert at analysing images. Tell me more about the following image, focusing on the following: {0}
+        You are a helpful AI assistant that is providing advice to first responder coordinators. The information        you are passed is alerts detected in images and  occuring the alerts detected by. You will recieve a list   of alerts and a description of the image. Please provide a response that is helpful to the allocation of         first responders for the coordinators. Be concise in your response.
     """
