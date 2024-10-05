@@ -8,6 +8,7 @@ from fastapi.responses import HTMLResponse
 
 from dashboard import Alert
 from pixtral import pixtralClient, PixtralMessage, PixtralImage
+from gpt4o import gpt4oClient, LargeMessage
 from video_engine import videoEngine
 
 from prompting import Prompting
@@ -50,9 +51,12 @@ async def dashboard_websocket(websocket: WebSocket):
                     PixtralImage(image)
                 )
 
-                ### Send response to OpenAI here
-
-                response_text = res
+                response_text = gpt4oClient.send_messages(
+                    LargeMessage(
+                        hazards,
+                        res
+                    )
+                )
 
             if message_data["type"] == "chat":
                 response_text = "chat is this real??"
