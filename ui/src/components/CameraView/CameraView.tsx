@@ -1,20 +1,21 @@
 import React from "react";
-import CameraCard from "./CameraCard";
 import VideoFrame from "./VideoFrame";
 
 const CameraView: React.FC = () => {
-  const cameras = ["Camera 1", "Camera 2", "Camera 3"];
+  const cameras = [1,2,3,4];
 
   return (
-    <div className="w-full px-3 mb-6 lg:mb-0 lg:w-7/12 h-96 lg:h-120">
-      <div className="h-full flex flex-wrap -mx-3">
-        {cameras.map((camera, index) => (
-          <div>
-            <CameraCard key={index} cameraName={camera} />
-            <VideoFrame streamID={index+1} />
+    <div className="flex flex-wrap w-[70%] px-3 mb-6 lg:mb-0 h-96 ">
+        {cameras.map((camera) => (
+          <div className="w-[400px] px-1 mb-6">
+            <div className="
+              relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border 
+              p-4
+            ">
+              <VideoFrame streamID={camera}></VideoFrame>
+            </div>
           </div>
         ))}
-      </div>
     </div>
   );
 };

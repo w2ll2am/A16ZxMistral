@@ -9,10 +9,10 @@ const Dashboard: React.FC = () => {
   return (
     <div className="ease-soft-in-out relative h-full max-h-screen rounded-xl transition-all duration-200">
       <Navbar />
-      <div className="w-full px-6 py-6 mx-auto">
-        <div className="flex flex-wrap -mx-3">
+      <div className="w-full px-6 py-6 mx-auto"> 
+        <div className="flex -mx-3">    
           <CameraView />
-          <div className="w-full max-w-full px-3 lg:w-5/12 lg:flex-none">
+          <div className="w-200 max-w-full min-h-full px-3">
             <AlertsTimeline />
           </div>
         </div>
