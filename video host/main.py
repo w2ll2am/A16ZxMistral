@@ -1,10 +1,15 @@
+import base64
+
 import cv2
 from flask import Flask, Response, jsonify
 import threading
 import os
 import time
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 class VideoStream:
     def __init__(self, video_path):
@@ -35,6 +40,8 @@ def get_video_by_id(id):
         if video_streams[key][0] == id:
             return key
 
+
+@cross_origin()
 @app.route('/stream/<video_id>')
 def get_current_frame(video_id):
     video_path = get_video_by_id(int(video_id))
@@ -43,8 +50,10 @@ def get_current_frame(video_id):
     frame = video_streams[video_path][1].get_frame()
     if frame is None:
         return "Frame not available", 503
+    frame = base64.b64encode(frame).decode('utf-8')
     return Response(frame, mimetype='image/jpeg')
 
+@cross_origin()
 @app.route('/stream_id')
 def list_videos():
     return jsonify({
