@@ -34,3 +34,7 @@ class Prompting(Enum):
         crush
         Do you see any dense crowds of more than 60 people, that could be dangerous to vunerable people?
     """
+
+    TELL_ME_MORE = """
+        You are an expert at analysing images. Tell me more about the following image, focusing on the following: {0}
+    """

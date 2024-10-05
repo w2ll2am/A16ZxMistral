@@ -35,24 +35,35 @@ async def dashboard_websocket(websocket: WebSocket):
             except json.JSONDecodeError:
                 continue
 
-            # Echo the received message back to the sender
-            echo_message = f"Echo: {message_data['text']}"
+            response_text = ""
+
+            if message_data["type"] == "tellMeMore":
+                payload = message_data["payload"]
+                stream_id = payload["stream_id"]
+                hazards = ", ".join(payload["hazards"])
+
+                prompt = Prompting.TELL_ME_MORE.value.format(hazards)
+
+                image = videoEngine.get_stream_by_id(stream_id)
+                res = pixtralClient.send_messages(
+                    PixtralMessage(prompt),
+                    PixtralImage(image)
+                )
+
+                ### Send response to OpenAI here
+
+                response_text = res
+
+            if message_data["type"] == "chat":
+                response_text = "chat is this real??"
+
             echo_data = {
-                "id": message_data['id'],
-                "text": echo_message,
-                "isUser": False,
-                "sender": "Server"
+                "type": message_data["type"],
+                "payload": {
+                    "message": response_text
+                }
             }
             await websocket.send_json(echo_data)
-
-            response_message = f"Server response to: {message_data['text']}"
-            response_data = {
-                "id": f"server-{message_data['id']}",
-                "text": response_message,
-                "isUser": False,
-                "sender": "Server"
-            }
-            await websocket.send_json(response_data)
 
     finally:
         active_connections.remove(websocket)
