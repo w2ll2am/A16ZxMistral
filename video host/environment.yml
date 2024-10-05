@@ -1,0 +1,12 @@
+name: dropout-video-host
+channels:
+  - defaults
+dependencies:
+  - python=3.10
+  - ipython
+  - ipykernel
+  - jupyter
+  - pip
+  - pip:
+    - flask
+    - opencv-python

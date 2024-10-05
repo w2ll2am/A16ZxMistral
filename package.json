@@ -1,15 +1,16 @@
 {
-  "name": "a16zmistral",
+  "name": "dropout",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "serve": "concurrently --kill-others \"cd ui && npm run dev\" \"cd api && conda activate a16zxmistral && langchain serve\"",
+    "serve": "concurrently --kill-others \"cd ui && npm run dev\" \"cd server && conda activate dropout && fastapi run\"",
     "install": "concurrently \"cd ui && npm install &\"  \"cd api && conda env create --file=environment.yml \""
   },
   "dependencies": {
     "a16zmistral": "file:",
     "concurrently": "^8.2.2",
+    "dropout": "file:",
     "ui": "file:"
   }
 }
