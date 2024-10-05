@@ -10,11 +10,10 @@ const Dashboard: React.FC = () => {
     <div className="ease-soft-in-out relative h-full max-h-screen rounded-xl transition-all duration-200">
       <Navbar />
       <div className="w-full px-6 py-6 mx-auto">
-        <div className="flex flex-wrap mt-6 -mx-3">
+        <div className="flex flex-wrap -mx-3">
           <CameraView />
-
           <div className="w-full max-w-full px-3 lg:w-5/12 lg:flex-none">
-            <ChatBox />
+            <AlertsTimeline />
           </div>
         </div>
         <div className="flex flex-wrap my-6 -mx-3">
@@ -22,7 +21,9 @@ const Dashboard: React.FC = () => {
             <InteractiveMap />
           </div>
 
-          <AlertsTimeline />
+          <div className="w-full max-w-full px-3 md:w-1/2 md:flex-none lg:w-1/3 lg:flex-none">
+            <ChatBox />
+          </div>
         </div>
       </div>
     </div>
