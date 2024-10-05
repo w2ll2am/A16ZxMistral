@@ -1,14 +1,16 @@
 import base64
 import ast
 import json
+from datetime import datetime
 
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
 
+from dashboard import Alert
 from pixtral import pixtralClient, PixtralMessage, PixtralImage
 from video_engine import videoEngine
 
-from prompting import Prompting, PromptClassifications, HazardClassification
+from prompting import Prompting
 
 app = FastAPI()
 
@@ -69,9 +71,18 @@ def stream_analysis_endpoint(stream_id: str):
         # clean the string
         res = res.strip("```").lstrip("json").replace("\n", "")
         res = ast.literal_eval(res)
+        print(res)
+        alerts = [
+            Alert(
+                type=hazard,
+                stream_id=int(stream_id),
+                lat=100, long=200,
+                timestamp=datetime.now()
+            ).to_dict()
+            for hazard in res if res[hazard] == "True"
+        ]
 
-        hazards = HazardClassification.from_analysis(res)
-
+        return json.dumps(alerts)
 
     return "error"
 

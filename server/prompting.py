@@ -1,26 +1,5 @@
-from dataclasses import dataclass, fields
+
 from enum import Enum
-
-
-@dataclass
-class HazardClassification:
-    fire: bool
-    smoke: bool
-    responders: bool
-    formations: bool
-    crowds: bool
-    crush: bool
-
-    @classmethod
-    def hazards(cls):
-        _fields = fields(cls)
-        return [f.name for f in _fields]
-
-    @classmethod
-    def from_analysis(cls, analysis_result):
-        if analysis_result.keys() == cls.hazards():
-            return HazardClassification(**analysis_result)
-        raise ValueError(f"Result {analysis_result}")
 
 
 class Prompting(Enum):
@@ -55,10 +34,3 @@ class Prompting(Enum):
         crush
         Do you see any dense crowds of more than 60 people, that could be dangerous to vunerable people?
     """
-
-
-if __name__ == "__main__":
-    classifier = HazardClassification(
-        True, True, True, True, True, True
-    )
-    print(classifier.hazards())
