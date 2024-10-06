@@ -41,7 +41,7 @@ class LargeMessage:
 class Gpt4oClient():
     def __init__(self):
         load_dotenv()
-        api_key = "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"
+        api_key = ""
         self.model = "gpt-4o-mini"
         self.client = OpenAI(api_key=api_key)
 
