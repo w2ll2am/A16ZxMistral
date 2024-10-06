@@ -7,6 +7,7 @@ export interface Alert {
   long: number;
   lat: number;
   timestamp: number;
+  ttl: number;
 }
 
 export interface AlertsState {
@@ -14,6 +15,8 @@ export interface AlertsState {
 }
 
 export const initialState: AlertsState = {};
+
+const TTL_DURATION = 3000; // 3 seconds in milliseconds
 
 const alertsSlice = createSlice({
   name: "alerts",
@@ -24,25 +27,35 @@ const alertsSlice = createSlice({
         if (!state[alert.stream_id]) {
           state[alert.stream_id] = [];
         }
-        // Check if alert of this type already exists for this stream
         const existingAlertIndex = state[alert.stream_id].findIndex(
           (a) => a.type === alert.type
         );
         if (existingAlertIndex === -1) {
-          // Add new alert
-          state[alert.stream_id].push(alert);
+          // Add new alert with TTL
+          state[alert.stream_id].push({ ...alert, ttl: TTL_DURATION });
+        } else {
+          // Reset TTL for existing alert
+          state[alert.stream_id][existingAlertIndex].ttl = TTL_DURATION;
         }
+      });
+    },
+    decrementTTL: (state) => {
+      Object.keys(state).forEach((streamId) => {
+        state[Number(streamId)] = state[Number(streamId)]
+          .map((alert) => ({ ...alert, ttl: alert.ttl - 100 }))
+          .filter((alert) => alert.ttl > 0);
       });
     },
   },
 });
 
-export const { addAlerts } = alertsSlice.actions;
+export const { addAlerts, decrementTTL } = alertsSlice.actions;
 
+export const selectAlertsByStreamId = (state: RootState, streamId: number) =>
+  state.alerts[streamId];
 // Selector to get sorted alerts from all streams
 export const selectSortedAlerts = (state: RootState) => {
   const allAlerts = Object.values(state.alerts).flat();
   return allAlerts.sort((a, b) => b.timestamp - a.timestamp);
 };
-
 export default alertsSlice.reducer;

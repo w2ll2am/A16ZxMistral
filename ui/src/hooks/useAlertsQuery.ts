@@ -1,6 +1,9 @@
 import { useQueries } from "react-query";
 import { useDispatch } from "react-redux";
-import { addAlerts } from "../redux/slices/alertsSlice";
+import { addAlerts, decrementTTL } from "../redux/slices/alertsSlice";
+import { useEffect } from "react";
+const TTL_DECREMENT_INTERVAL = 100; // 100ms
+const FETCH_INTERVAL = 3000; // 3 seconds
 
 const fetchAlerts = async (streamId: number) => {
   const response = await fetch(
@@ -24,9 +27,18 @@ export const useAlertsQuery = () => {
           dispatch(addAlerts(data));
         }
       },
-      refetchInterval: 2000, // Refetch every 5 seconds
+      refetchInterval: FETCH_INTERVAL,
     }))
   );
+
+  // Set up TTL decrement interval
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      dispatch(decrementTTL());
+    }, TTL_DECREMENT_INTERVAL);
+
+    return () => clearInterval(intervalId);
+  }, [dispatch]);
 
   return queries;
 };
