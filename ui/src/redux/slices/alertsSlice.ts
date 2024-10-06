@@ -13,34 +13,7 @@ export interface AlertsState {
   [streamId: number]: Alert[];
 }
 
-export const initialState: AlertsState = {
-  1: [
-    {
-      type: "warning",
-      stream_id: 1,
-      long: -122.4194,
-      lat: 37.7749,
-      timestamp: 1633027200000, // 2021-10-01 00:00:00 UTC
-    },
-    {
-      type: "error",
-      stream_id: 1,
-      long: -122.4194,
-      lat: 37.7749,
-      timestamp: 1633113600000, // 2021-10-02 00:00:00 UTC
-    },
-  ],
-  2: [
-    {
-      type: "info",
-      stream_id: 2,
-      long: -74.006,
-      lat: 40.7128,
-      timestamp: 1633200000000, // 2021-10-03 00:00:00 UTC
-    },
-  ],
-  3: [], // Empty stream for testing
-};
+export const initialState: AlertsState = {};
 
 const alertsSlice = createSlice({
   name: "alerts",
