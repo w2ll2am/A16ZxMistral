@@ -7,6 +7,7 @@ import os
 import time
 from flask_cors import CORS, cross_origin
 
+mutex = threading.Lock()
 app = Flask(__name__)
 cors = CORS(app)
 app.config['CORS_HEADERS'] = 'Content-Type'
@@ -25,8 +26,12 @@ class VideoStream:
         stream_position = current_time % self.duration
         frame_number = int(stream_position * self.fps)
 
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
-        ret, frame = self.cap.read()
+        try:
+            mutex.acquire()
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+            ret, frame = self.cap.read()
+        finally:
+            mutex.release()
         if not ret:
             return None
 

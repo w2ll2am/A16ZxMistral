@@ -8,7 +8,7 @@ const VideoFrame = ({streamID}:{streamID: number}) => {
         {frameData ? (
           <img 
             src={`data:image/jpeg;base64,${frameData}`} alt="Video frame"
-            className="w-[400px]"
+            className="w-[400px] h-[220px] object-cover"
           />
         ) : (
           <p>Loading...</p>

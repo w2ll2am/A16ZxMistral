@@ -37,3 +37,8 @@ class VideoEngine:
 
 
 videoEngine = VideoEngine()
+
+ffmpeg -i "Car Fire.mov" -vf scale="640:480" "CarFire.mov"
+ffmpeg -i "Shipping 2.mov" -vf scale="640:480" "Shipping2.mov"
+ffmpeg -i "Shipping.mov" -vf scale="640:480" Shipping3.mov
+ffmpeg -i "Warehouse Fire.mov" -vf scale="640:480" "WarehouseFire.mov"

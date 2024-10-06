@@ -20,7 +20,7 @@ export const useVideoFrame = (streamID: number) => {
 
 		// Start fetching frames
 		fetchFrame();
-		frameIntervalRef.current = setInterval(fetchFrame, 100); // 30 fps
+		frameIntervalRef.current = setInterval(fetchFrame, 20 + Math.random()*40); // 30 fps
 
 		// Cleanup function
 		return () => {
