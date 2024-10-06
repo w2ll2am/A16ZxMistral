@@ -29,8 +29,7 @@ class VideoEngine:
             # Get the image from the URL
             response = requests.get(self.url(f"stream/{id}"))
             response.raise_for_status()  # Check if the request was successful
-            decoded_image = base64.b64encode(response.content).decode('utf-8')
-            return decoded_image
+            return response.content.decode()
 
         except requests.exceptions.RequestException as e:
             print(f"An error occurred: {e}")

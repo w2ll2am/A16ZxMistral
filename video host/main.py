@@ -1,10 +1,16 @@
+import base64
+
 import cv2
 from flask import Flask, Response, jsonify
 import threading
 import os
 import time
+from flask_cors import CORS, cross_origin
 
+mutex = threading.Lock()
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
 
 class VideoStream:
     def __init__(self, video_path):
@@ -20,21 +26,27 @@ class VideoStream:
         stream_position = current_time % self.duration
         frame_number = int(stream_position * self.fps)
 
-        self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
-        ret, frame = self.cap.read()
+        try:
+            mutex.acquire()
+            self.cap.set(cv2.CAP_PROP_POS_FRAMES, frame_number)
+            ret, frame = self.cap.read()
+        finally:
+            mutex.release()
         if not ret:
             return None
 
         return cv2.imencode('.jpg', frame)[1].tobytes()
 
 video_streams = {}
-video_folder = './videos'  # Replace with your folder path
+video_folder = './videos'
 
 def get_video_by_id(id):
     for key in video_streams.keys():
         if video_streams[key][0] == id:
             return key
 
+
+@cross_origin()
 @app.route('/stream/<video_id>')
 def get_current_frame(video_id):
     video_path = get_video_by_id(int(video_id))
@@ -43,8 +55,10 @@ def get_current_frame(video_id):
     frame = video_streams[video_path][1].get_frame()
     if frame is None:
         return "Frame not available", 503
+    frame = base64.b64encode(frame).decode('utf-8')
     return Response(frame, mimetype='image/jpeg')
 
+@cross_origin()
 @app.route('/stream_id')
 def list_videos():
     return jsonify({

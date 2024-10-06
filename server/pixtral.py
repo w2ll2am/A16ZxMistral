@@ -39,7 +39,7 @@ class PixtralClient():
         self.model = "pixtral-12b-2409"
         self.client = Mistral(api_key=api_key)
 
-    def send_messages(self, *messages: PixtralMessage):
+    def send_messages(self, *messages: PixtralMessage, raw: bool = False):
         """
         Send a chain of Pixtral messages / images
         :param messages:
@@ -58,8 +58,12 @@ class PixtralClient():
                         },
                     ]
                 )
-                return chat_response
-            except:
+                if raw:
+                    return chat_response
+                else:
+                    return chat_response.choices[0].message.content
+            except Exception as e:
+                # print(e)
                 retries += 1
                 continue
 
