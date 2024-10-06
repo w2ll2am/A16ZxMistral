@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 
 const Graph = () => {
   const chartRef = useRef(null);
-  const alertData = useSelector((state) => state.alerts.data);
+//   const alertData = useSelector((state) => state.alerts.data);
   const dispatch = useDispatch();
 
   const options = {
@@ -40,7 +40,7 @@ const Graph = () => {
     },
     series: [{
       name: 'Alerts',
-      data: alertData.map((value, index) => [Date.now() - (alertData.length - 1 - index) * 1000, value]),
+      data: [], //alertData.map((value, index) => [Date.now() - (alertData.length - 1 - index) * 1000, value]),
       color: 'rgba(75, 192, 192, 1)',
       fillColor: {
         linearGradient: { x1: 0, x2: 0, y1: 0, y2: 1 },
@@ -63,15 +63,15 @@ const Graph = () => {
     }
   };
 
-  useEffect(() => {
-    if (chartRef.current) {
-      const chart = chartRef.current.chart;
-      if (chart.series[0]) {
-        const seriesData = alertData.map((value, index) => [Date.now() - (alertData.length - 1 - index) * 1000, value]);
-        chart.series[0].setData(seriesData, true, true);
-      }
-    }
-  }, [alertData]);
+//   useEffect(() => {
+//     if (chartRef.current) {
+//       const chart = chartRef.current.chart;
+//       if (chart.series[0]) {
+//         const seriesData = alertData.map((value, index) => [Date.now() - (alertData.length - 1 - index) * 1000, value]);
+//         chart.series[0].setData(seriesData, true, true);
+//       }
+//     }
+//   }, [alertData]);
 
   const addDataPoint = () => {
     const newValue = Math.random() * 100;
@@ -79,7 +79,7 @@ const Graph = () => {
   };
 
   return (
-    <div className="p-4 bg-gray-800 rounded-lg">
+    <div className="p-4 bg-gray-800 max-w-[25%]">
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
