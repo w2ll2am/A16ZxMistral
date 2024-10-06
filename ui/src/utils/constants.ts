@@ -19,3 +19,5 @@ export const getAlertBorderColor = (type: string): string => {
       return "border-yellow-600";
   }
 };
+
+export const CLEAN_INTERVAL = 20000; // 20 seconds

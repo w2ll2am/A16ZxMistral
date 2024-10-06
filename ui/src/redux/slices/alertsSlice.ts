@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../store";
-
+import { CLEAN_INTERVAL } from "../../utils/constants";
 export interface Alert {
   type: string;
   stream_id: number;
@@ -13,15 +13,13 @@ export interface AlertsState {
   [streamId: number]: Alert[];
 }
 
-const initialState: AlertsState = {
-  1: [],
-};
+const initialState: AlertsState = {};
 
 const alertsSlice = createSlice({
   name: "alerts",
   initialState,
   reducers: {
-    addAlerts: (state, action: PayloadAction<Alert[]>) => {
+    addOrUpdateAlerts: (state, action: PayloadAction<Alert[]>) => {
       action.payload.forEach((alert) => {
         if (!state[alert.stream_id]) {
           state[alert.stream_id] = [];
@@ -31,17 +29,29 @@ const alertsSlice = createSlice({
         );
         if (existingAlertIndex === -1) {
           // Add new alert
-          state[alert.stream_id].push(alert);
+          state[alert.stream_id].push({
+            ...alert,
+            timestamp: Date.now(), // Use current timestamp
+          });
         } else {
-          // Update existing alert
-          state[alert.stream_id][existingAlertIndex] = alert;
+          // Update existing alert's timestamp
+          state[alert.stream_id][existingAlertIndex].timestamp = Date.now();
         }
+      });
+    },
+    cleanAlerts: (state) => {
+      const currentTime = Date.now();
+      const twentySecondsAgo = currentTime - CLEAN_INTERVAL; // 20 seconds in milliseconds
+      Object.keys(state).forEach((streamId) => {
+        state[Number(streamId)] = state[Number(streamId)].filter(
+          (alert) => alert.timestamp > twentySecondsAgo
+        );
       });
     },
   },
 });
 
-export const { addAlerts } = alertsSlice.actions;
+export const { addOrUpdateAlerts, cleanAlerts } = alertsSlice.actions;
 
 // Selector to get alerts by stream ID
 export const selectAlertsByStreamId = (state: RootState, streamId: number) =>
@@ -49,12 +59,7 @@ export const selectAlertsByStreamId = (state: RootState, streamId: number) =>
 
 // Selector to get sorted alerts from all streams
 export const selectSortedAlerts = (state: RootState): Alert[] => {
-  const allAlerts = Object.values(state.alerts).filter(Array.isArray).flat();
-
-  if (allAlerts.length === 0) {
-    return [];
-  }
-
+  const allAlerts = Object.values(state.alerts).flat();
   return allAlerts.sort((a, b) => b.timestamp - a.timestamp);
 };
 
