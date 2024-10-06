@@ -39,6 +39,7 @@ const ChatBox: React.FC = () => {
               key={index}
               message={message.text}
               isUser={message.isUser}
+              shouldAnimate={!message.isUser && index === messages.length - 1}
             />
           ))}
           <div ref={messagesEndRef} />
