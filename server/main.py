@@ -51,34 +51,42 @@ async def dashboard_websocket(websocket: WebSocket):
 
             response_text = ""
 
-            if message_data["type"] == "tellMeMore":
-                payload = message_data["payload"]
-                stream_id = payload["stream_id"]
-                hazards = ", ".join(payload["hazards"])
+            message_text: str = message_data["text"]
+            is_user: bool = message_data["isUser"]
 
-                prompt = Prompting.TELL_ME_MORE.value.format(hazards)
+            if message_text.startswith("Tell me more"):
+                stream_id = int(message_text[-1])
+                hazard = message_text.split(" alert ")[0].split(" ")[-1]
+                alert_message = message_text.split(" the ")[-1]
+
+                print(stream_id, hazard, alert_message)
+
+                prompt = Prompting.TELL_ME_MORE.value.format(hazard)
 
                 image = videoEngine.get_stream_by_id(stream_id)
                 res = pixtralClient.send_messages(
                     PixtralMessage(prompt),
+                    PixtralMessage(alert_message),
                     PixtralImage(image)
                 )
 
+                print("PIXTRAL", res)
+
                 response_text = gpt4oClient.send_messages(
                     LargeMessage(
-                        hazards,
+                        hazard,
                         res
                     )
                 )
 
-            if message_data["type"] == "chat":
-                response_text = "chat is this real??"
+                print("GPT", response_text)
+
+            # if message_data["type"] == "chat":
+            #     response_text = "chat is this real??"
 
             echo_data = {
-                "type": message_data["type"],
-                "payload": {
-                    "message": response_text
-                }
+                "message": response_text,
+                "isUser": False
             }
             await websocket.send_json(echo_data)
 
@@ -96,11 +104,11 @@ def stream_analysis_endpoint(stream_id: str):
             PixtralImage(image)
         )
         try:
-            print(res)
+            # print(res)
             # clean the string
             res = res.strip("```").lstrip("json").replace("\n", "")
             res = ast.literal_eval(res)
-            print(res)
+            # print(res)
             alerts = [
                 Alert(
                     type=hazard,

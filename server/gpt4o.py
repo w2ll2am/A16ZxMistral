@@ -15,20 +15,20 @@ from prompting import Prompting
 class LargeMessage:
     def __init__(
         self, 
-        alerts: str,
+        text: str,
         image_description: str = "",
     ):
-        self.alerts = alerts
+        self.text = text
         self.image_description = image_description
     
     def format_message(self):
-        alert_formatted = [json.dumps(alert.to_dict()) for alert in self.alerts].join("\n")
-        return f"{Prompting.TELL_ME_MORE}\n{alert_formatted}\n{self.image_description}"
+
+        return f"{Prompting.GPT_SYSTEM_PROMPT.value}\n{self.text}\n{self.image_description}"
         
 class Gpt4oClient():
     def __init__(self):
         load_dotenv()
-        api_key = os.getenv("OPENAI_API_KEY")
+        api_key = "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"
         self.model = "gpt-4o-mini"
         self.client = OpenAI(api_key=api_key)
 
@@ -54,7 +54,8 @@ class Gpt4oClient():
                     return chat_response
                 else:
                     return chat_response.choices[0].message.content
-            except:
+            except Exception as e:
+                print(e)
                 retries += 1
                 continue
 
