@@ -24,12 +24,12 @@ const Dashboard: React.FC = () => {
         </div>
       </div>
       
-      <div className="mt-20 p-2 flex flex-wrap w-full">
+      {/* <div className="mt-20 p-2 flex flex-wrap w-full">
         <Graph/>
         <Graph/>
         <Graph/>
         <Graph/>
-      </div>
+      </div> */}
     </div>
     
   );

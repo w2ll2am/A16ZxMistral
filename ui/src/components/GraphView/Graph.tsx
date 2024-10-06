@@ -79,7 +79,7 @@ const Graph = () => {
   };
 
   return (
-    <div className="p-4 bg-gray-800 max-w-[25%]">
+    <div className="p-4 bg-gray-800">
       <HighchartsReact
         highcharts={Highcharts}
         options={options}
