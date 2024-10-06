@@ -5,12 +5,12 @@ const CameraView: React.FC = () => {
   const cameras = [1,2,3,4];
 
   return (
-    <div className="flex flex-wrap w-[70%] px-3 mb-6 lg:mb-0 h-96 ">
+    <div className="flex flex-wrap pl-3 gap-y-2 w-[840px] ">
         {cameras.map((camera) => (
-          <div className="w-[400px] px-1 mb-6">
+          <div className="w-[410px] px-1">
             <div className="
-              relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border 
-              p-4
+              relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-[5px] bg-clip-border 
+              p-2
             ">
               <VideoFrame streamID={camera}></VideoFrame>
             </div>

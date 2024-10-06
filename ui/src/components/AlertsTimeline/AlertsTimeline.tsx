@@ -36,12 +36,12 @@ const AlertsTimeline: React.FC = () => {
   };
 
   return (
-    <div className="border-black/12.5 shadow-soft-xl relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border">
-      <div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white p-6 pb-0">
+    <div className="border-black/12.5 shadow-soft-xl relative flex h-[1000px] flex-col break-words rounded-xl border-0 border-solid bg-white bg-clip-border">
+      <div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white px-6 pt-2 pb-2">
         <h6 className="mb-0">Alerts overview</h6>
       </div>
-      <div className="flex-auto p-4 overflow-hidden">
-        <div className="h-[calc(100vh-700px)] overflow-y-auto">
+      <div className="flex-auto px-4 py-1 overflow-hidden">
+        <div className="h-[150px] overflow-y-auto">
           <div className="relative">
             {displayedAlerts.map((alert, index) => (
               <AlertItem

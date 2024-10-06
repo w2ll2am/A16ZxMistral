@@ -22,9 +22,9 @@ const InteractiveMap: React.FC = () => {
   if (!isLoaded) return <div>Loading...</div>;
 
   return (
-    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
-      <div className="flex-auto p-4">
-        <div className="py-4 pr-1 mb-4 bg-gradient-to-tl from-gray-900 to-slate-800 rounded-xl">
+    <div className="mt-1 pl-1 w-full relative flex flex-col break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
+      <div className="flex-auto p-2">
+        {/* <div className="py-4 pr-1 mb-4 bg-gradient-to-tl from-gray-900 to-slate-800 rounded-xl">
           <div className="flex mb-2">
             <div className="flex items-center justify-center w-12 h-12 mr-4 text-white rounded-lg bg-center shadow-soft-2xl bg-no-repeat bg-cover bg-gradient-to-tl from-gray-900 to-slate-800">
               <i className="fas fa-map-marker-alt text-lg"></i>
@@ -38,8 +38,8 @@ const InteractiveMap: React.FC = () => {
               </p>
             </div>
           </div>
-        </div>
-        <div style={{ height: "400px" }}>
+        </div> */}
+        <div style={{ height: "280px" }}>
           <GoogleMap
             mapContainerStyle={{ height: "100%", width: "100%" }}
             center={{ lat: 51.505, lng: -0.09 }}
