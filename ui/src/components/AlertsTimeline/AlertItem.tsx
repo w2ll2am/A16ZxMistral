@@ -1,5 +1,4 @@
 import React from "react";
-import { getAlertColor } from "../../utils/constants";
 import {
   AlertTriangle,
   Flame,
@@ -39,6 +38,25 @@ const getAlertIcon = (type: string) => {
       return <UserX {...iconProps} />;
     default:
       return <AlertTriangle {...iconProps} />;
+  }
+};
+
+const getAlertColor = (type: string) => {
+  switch (type) {
+    case "fire":
+      return "from-red-600 to-rose-400";
+    case "smoke":
+      return "from-gray-600 to-gray-400";
+    case "responders":
+      return "from-blue-600 to-cyan-400";
+    case "formations":
+      return "from-green-600 to-lime-400";
+    case "crowds":
+      return "from-yellow-600 to-yellow-400";
+    case "crush":
+      return "from-purple-600 to-pink-400";
+    default:
+      return "from-orange-600 to-orange-400";
   }
 };
 
