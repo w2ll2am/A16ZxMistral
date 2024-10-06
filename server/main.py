@@ -72,6 +72,18 @@ async def dashboard_websocket(websocket: WebSocket):
 
                 print("PIXTRAL", res)
 
+                if (hazard == "crowds"):
+                    prompt = Prompting.CROWD_ANALYSIS.value
+                    crowding = pixtralClient.send_messages(
+                        PixtralMessage(prompt),
+                        PixtralImage(image)
+                    )
+                    echo_data = {
+                        "text": crowding,
+                        "isUser": False
+                    }
+                    await websocket.send_json(echo_data)
+
                 response_text = gpt4oClient.send_messages(
                     LargeMessage(
                         hazard,
