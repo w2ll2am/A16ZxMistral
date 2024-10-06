@@ -24,7 +24,7 @@ export const useAlertsQuery = () => {
           dispatch(addAlerts(data));
         }
       },
-      refetchInterval: 3000, // Refetch every 5 seconds
+      refetchInterval: 2000, // Refetch every 5 seconds
     }))
   );
 

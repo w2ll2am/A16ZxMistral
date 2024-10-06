@@ -85,7 +85,7 @@ async def dashboard_websocket(websocket: WebSocket):
             #     response_text = "chat is this real??"
 
             echo_data = {
-                "message": response_text,
+                "text": response_text,
                 "isUser": False
             }
             await websocket.send_json(echo_data)
@@ -104,11 +104,13 @@ def stream_analysis_endpoint(stream_id: str):
             PixtralImage(image)
         )
         try:
-            # print(res)
             # clean the string
             res = res.strip("```").lstrip("json").replace("\n", "")
             res = ast.literal_eval(res)
-            # print(res)
+
+            if res["crowds"] == "True":
+                pass
+
             alerts = [
                 Alert(
                     type=hazard,
