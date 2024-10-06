@@ -1,6 +1,8 @@
-# A16ZxMistral Repo
+# DROPOUT Repo
 
-This is the A16ZXMISTRAL repo, to run the website first follow steps in `Setup`, then follow steps in `Running the Website`.
+This is the DROPOUT repo, the platform to monitors hazardous events in your camera feeds for first responders and live feed security. 
+
+The following are instructions to run the website, first follow steps in `Setup`, then follow steps in `Running the Website`.
 
 ## Project
 
