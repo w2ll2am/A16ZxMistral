@@ -8,14 +8,13 @@ interface CameraLocation {
   lat: number;
   lng: number;
 }
-
 const cameraLocations: CameraLocation[] = [
-  { id: 1, name: "Blackfriars Bridge", lat: 51.5106, lng: -0.1031 },
-  { id: 2, name: "St. Paul's Cathedral", lat: 51.5138, lng: -0.0984 },
-  { id: 3, name: "Temple", lat: 51.5114, lng: -0.1134 },
+  { id: 1, name: "Blackfriars", lat: 51.5106, lng: -0.1021 },
+  { id: 2, name: "Tower of London", lat: 51.5081, lng: -0.0759 },
+  { id: 3, name: "Trafalgar Square", lat: 51.508, lng: -0.1281 },
   { id: 4, name: "Sky Garden", lat: 51.5113, lng: -0.0839 },
   { id: 5, name: "Southwark Bridge", lat: 51.5079, lng: -0.0935 },
-  { id: 6, name: "Fleet Street", lat: 51.5143, lng: -0.109 },
+  { id: 6, name: "Temple", lat: 51.5114, lng: -0.1134 },
 ];
 
 const apiKey = "AIzaSyA4MYHwX8TphBBJx5Ed00DM2DB-f3MA8qM" || "";
@@ -35,8 +34,8 @@ const MapComponent: React.FC = () => {
         )) as google.maps.MarkerLibrary;
 
         mapInstanceRef.current = new Map(mapRef.current, {
-          center: { lat: 51.5126, lng: -0.0981 },
-          zoom: 15,
+          center: { lat: 51.51, lng: -0.102 },
+          zoom: 14,
           mapId: "DEMO_MAP_ID",
         });
 
@@ -57,7 +56,7 @@ const MapComponent: React.FC = () => {
     initMap();
   }, []);
 
-  return <div ref={mapRef} style={{ height: "450px", width: "100%" }} />;
+  return <div ref={mapRef} style={{ height: "280px", width: "100%" }} />;
 };
 
 const createMarkerContent = (camera: CameraLocation) => {
@@ -78,13 +77,13 @@ const createMarkerContent = (camera: CameraLocation) => {
 
 const InteractiveMap: React.FC = () => {
   return (
-    <div className="relative flex flex-col min-w-0 break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
-      <div className="flex-auto p-4">
+    <div className="mt-1 pl-1 w-full relative flex flex-col break-words bg-white shadow-soft-xl rounded-2xl bg-clip-border">
+      <div className="flex-auto p-2">
         <div className="h-full">
           <div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white  pb-0">
-            <h5 className="pt-2 mb-6 font-bold text-gray-700">
+            {/* <h5 className="pt-2 mb-6 font-bold text-gray-700">
               Interactive Camera Map
-            </h5>
+            </h5> */}
           </div>
           <Wrapper apiKey={apiKey} libraries={["marker"]}>
             <div className="bg-white rounded-lg shadow-lg">

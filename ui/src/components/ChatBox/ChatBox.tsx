@@ -27,12 +27,12 @@ const ChatBox: React.FC = () => {
   };
 
   return (
-    <div className="relative flex h-full min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border shadow-soft-xl">
-      <div className="relative z-10 flex flex-col flex-auto h-full p-4">
+    <div className="relative flex min-w-0 flex-col break-words rounded-2xl border-0 border-solid bg-white bg-clip-border shadow-soft-xl">
+      <div className="relative z-10 flex flex-col flex-auto  p-4">
         <h5 className="pt-2 mb-6 font-bold text-gray-700">Chat</h5>
         <div
           id="chat-messages"
-          className="flex-grow h-96 overflow-y-auto mb-4" // Added height limit to make chat messages scrollable
+          className="flex-grow h-[300px] overflow-y-auto mb-4" // Added height limit to make chat messages scrollable
         >
           {messages.map((message, index) => (
             <ChatMessage
