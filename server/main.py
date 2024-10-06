@@ -5,6 +5,7 @@ from datetime import datetime
 
 from fastapi import FastAPI, WebSocket
 from fastapi.responses import HTMLResponse
+from fastapi.middleware.cors import CORSMiddleware
 
 from dashboard import Alert
 from pixtral import pixtralClient, PixtralMessage, PixtralImage
@@ -15,6 +16,18 @@ from prompting import Prompting
 
 app = FastAPI()
 
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 async def root():
@@ -73,7 +86,7 @@ async def dashboard_websocket(websocket: WebSocket):
         active_connections.remove(websocket)
 
 
-@app.get("/stream_analysis/{stream_id}", response_class=HTMLResponse)
+@app.get("/stream/alert/{stream_id}", response_class=HTMLResponse)
 def stream_analysis_endpoint(stream_id: str):
     attempts = 0
     while attempts < 3:
@@ -82,22 +95,27 @@ def stream_analysis_endpoint(stream_id: str):
             PixtralMessage(Prompting.STREAM_CLASSIFIER.value),
             PixtralImage(image)
         )
+        try:
+            print(res)
+            # clean the string
+            res = res.strip("```").lstrip("json").replace("\n", "")
+            res = ast.literal_eval(res)
+            print(res)
+            alerts = [
+                Alert(
+                    type=hazard,
+                    stream_id=int(stream_id),
+                    lat=100, long=200,
+                    timestamp=datetime.now()
+                ).to_dict()
+                for hazard in res if res[hazard] == "True"
+            ]
 
-        # clean the string
-        res = res.strip("```").lstrip("json").replace("\n", "")
-        res = ast.literal_eval(res)
-        print(res)
-        alerts = [
-            Alert(
-                type=hazard,
-                stream_id=int(stream_id),
-                lat=100, long=200,
-                timestamp=datetime.now()
-            ).to_dict()
-            for hazard in res if res[hazard] == "True"
-        ]
+            return json.dumps(alerts)
 
-        return json.dumps(alerts)
+        except:
+            attempts += 1
+            continue
 
     return "error"
 
@@ -125,7 +143,7 @@ def crowd_analysis_endpoint(stream_id: str):
             for hazard in res #if res[hazard] == "True"
         ]
 
-        return json.dumps(res)
+        return json.dumps(alerts)
 
     return "error"
 

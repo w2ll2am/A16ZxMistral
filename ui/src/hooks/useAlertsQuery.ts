@@ -4,7 +4,7 @@ import { addAlerts } from "../redux/slices/alertsSlice";
 
 const fetchAlerts = async (streamId: number) => {
   const response = await fetch(
-    `http://localhost:5050/stream/alert/${streamId}`
+    `http://localhost:8000/stream/alert/${streamId}`
   );
   if (!response.ok) {
     throw new Error("Network response was not ok");
@@ -24,7 +24,7 @@ export const useAlertsQuery = () => {
           dispatch(addAlerts(data));
         }
       },
-      refetchInterval: 2000, // Refetch every 5 seconds
+      refetchInterval: 3000, // Refetch every 5 seconds
     }))
   );
 

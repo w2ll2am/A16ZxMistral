@@ -62,7 +62,8 @@ class PixtralClient():
                     return chat_response
                 else:
                     return chat_response.choices[0].message.content
-            except:
+            except Exception as e:
+                # print(e)
                 retries += 1
                 continue
 
