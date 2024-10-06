@@ -13,33 +13,8 @@ export interface AlertsState {
   [streamId: number]: Alert[];
 }
 
-export const initialState: AlertsState = {
-  1: [
-    {
-      type: "warning",
-      stream_id: 1,
-      long: -122.4194,
-      lat: 37.7749,
-      timestamp: 1633027200000, // 2021-10-01 00:00:00 UTC
-    },
-    {
-      type: "error",
-      stream_id: 1,
-      long: -122.4194,
-      lat: 37.7749,
-      timestamp: 1633113600000, // 2021-10-02 00:00:00 UTC
-    },
-  ],
-  2: [
-    {
-      type: "info",
-      stream_id: 2,
-      long: -74.006,
-      lat: 40.7128,
-      timestamp: 1633200000000, // 2021-10-03 00:00:00 UTC
-    },
-  ],
-  3: [], // Empty stream for testing
+const initialState: AlertsState = {
+  1: [],
 };
 
 const alertsSlice = createSlice({
@@ -51,13 +26,15 @@ const alertsSlice = createSlice({
         if (!state[alert.stream_id]) {
           state[alert.stream_id] = [];
         }
-        // Check if alert of this type already exists for this stream
         const existingAlertIndex = state[alert.stream_id].findIndex(
           (a) => a.type === alert.type
         );
         if (existingAlertIndex === -1) {
           // Add new alert
           state[alert.stream_id].push(alert);
+        } else {
+          // Update existing alert
+          state[alert.stream_id][existingAlertIndex] = alert;
         }
       });
     },
@@ -66,9 +43,18 @@ const alertsSlice = createSlice({
 
 export const { addAlerts } = alertsSlice.actions;
 
+// Selector to get alerts by stream ID
+export const selectAlertsByStreamId = (state: RootState, streamId: number) =>
+  state.alerts[streamId] || [];
+
 // Selector to get sorted alerts from all streams
-export const selectSortedAlerts = (state: RootState) => {
-  const allAlerts = Object.values(state.alerts).flat();
+export const selectSortedAlerts = (state: RootState): Alert[] => {
+  const allAlerts = Object.values(state.alerts).filter(Array.isArray).flat();
+
+  if (allAlerts.length === 0) {
+    return [];
+  }
+
   return allAlerts.sort((a, b) => b.timestamp - a.timestamp);
 };
 

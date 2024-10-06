@@ -1,6 +1,7 @@
 import { useQueries } from "react-query";
 import { useDispatch } from "react-redux";
 import { addAlerts } from "../redux/slices/alertsSlice";
+const FETCH_INTERVAL = 3000; // 3 seconds
 
 const fetchAlerts = async (streamId: number) => {
   const response = await fetch(
@@ -24,7 +25,7 @@ export const useAlertsQuery = () => {
           dispatch(addAlerts(data));
         }
       },
-      refetchInterval: 3000, // Refetch every 5 seconds
+      refetchInterval: FETCH_INTERVAL,
     }))
   );
 
