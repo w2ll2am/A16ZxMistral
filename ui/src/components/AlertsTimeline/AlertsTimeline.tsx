@@ -37,7 +37,7 @@ const AlertsTimeline: React.FC = () => {
 
   return (
     <div className="border-black/12.5 shadow-soft-xl relative flex h-[1000px] flex-col break-words rounded-xl border-0 border-solid bg-white bg-clip-border">
-      <div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white px-6 pt-2 pb-2">
+      <div className="border-black/12.5 mb-0 rounded-t-2xl border-b-0 border-solid bg-white px-6 pt-2">
         <h6 className="mb-0">Alerts overview</h6>
       </div>
       <div className="flex-auto px-4 py-1 overflow-hidden">

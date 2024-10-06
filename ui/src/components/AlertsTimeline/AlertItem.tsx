@@ -70,22 +70,23 @@ const AlertItem: React.FC<AlertItemProps> = ({
 
   return (
     <div
-      className="relative mb-4 flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
+      className="relative mb-0 flex items-center cursor-pointer hover:bg-gray-50 p-2 rounded-lg transition-colors duration-200"
       onClick={onClick}
     >
       <div
-        className={`w-10 h-10 rounded-full bg-gradient-to-tl ${bgColor} flex items-center justify-center mr-4`}
+        className={`w-8 h-8 rounded-full bg-gradient-to-tl ${bgColor} flex items-center justify-center mr-4`}
       >
         {getAlertIcon(type)}
       </div>
       <div className="flex-grow">
         <h6 className="mb-0 text-sm font-semibold leading-normal text-slate-700">
-          {type.charAt(0).toUpperCase() + type.slice(1)} Alert - Stream{" "}
+          {type.charAt(0).toUpperCase() + type.slice(1)} - Stream{" "}
           {stream_id}
+          <p className="mt-0 mb-0 text-xs font-semibold leading-tight text-slate-400">
+            {new Date(timestamp * 1000).toLocaleString()}
+          </p>
         </h6>
-        <p className="mt-1 mb-0 text-xs font-semibold leading-tight text-slate-400">
-          {new Date(timestamp * 1000).toLocaleString()}
-        </p>
+        
       </div>
     </div>
   );

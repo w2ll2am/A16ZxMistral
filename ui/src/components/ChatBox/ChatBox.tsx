@@ -32,7 +32,7 @@ const ChatBox: React.FC = () => {
         <h5 className="pt-2 mb-6 font-bold text-gray-700">Chat</h5>
         <div
           id="chat-messages"
-          className="flex-grow h-[300px] overflow-y-auto mb-4" // Added height limit to make chat messages scrollable
+          className="flex-grow h-[350px] overflow-y-auto mb-4 text-[13px]" // Added height limit to make chat messages scrollable
         >
           {messages.map((message, index) => (
             <ChatMessage
