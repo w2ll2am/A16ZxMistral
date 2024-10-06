@@ -14,12 +14,7 @@ export interface AlertsState {
   [streamId: number]: Alert[];
 }
 
-const initialState: AlertsState = {
-  1: [],
-  2: [],
-  3: [],
-  4: [],
-};
+export const initialState: AlertsState = {};
 
 const TTL_DURATION = 3000; // 3 seconds in milliseconds
 
